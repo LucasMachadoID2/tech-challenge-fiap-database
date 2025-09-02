@@ -144,3 +144,57 @@ resource "aws_dynamodb_table" "products" {
     Project = "tech-challenge"
   }
 }
+
+resource "aws_dynamodb_table" "payments" {
+  name         = "tech-challenge-payments"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "id"
+
+  # Atributos da tabela
+  attribute {
+    name = "id"
+    type = "S"
+  }
+
+  attribute {
+    name = "status"
+    type = "S"
+  }
+
+  attribute {
+    name = "qrCode"
+    type = "S"
+  }
+
+  attribute {
+    name = "qrImage"
+    type = "S"
+  }
+
+  # GSI para buscar pagamentos por status
+  global_secondary_index {
+    name            = "ByStatus"
+    hash_key        = "status"
+    projection_type = "ALL"
+  }
+
+  # GSI para buscar pagamentos por qrCode
+  global_secondary_index {
+    name            = "ByQrCode"
+    hash_key        = "qrCode"
+    projection_type = "ALL"
+  }
+
+  # GSI para buscar pagamentos por qrImage
+  global_secondary_index {
+    name            = "ByQrImage"
+    hash_key        = "qrImage"
+    projection_type = "ALL"
+  }
+
+  tags = {
+    Project = "tech-challenge"
+  }
+}
+
+

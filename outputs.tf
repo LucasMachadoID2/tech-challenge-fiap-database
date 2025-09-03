@@ -1,4 +1,3 @@
-# outputs.tf
 output "dynamodb_table_arns" {
   description = "ARNs de todas as tabelas DynamoDB"
   value = {

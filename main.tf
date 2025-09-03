@@ -1,13 +1,50 @@
+
+# 1. Criar o bucket S3 para armazenar os estados de TODOS os projetos Terraform
+resource "aws_s3_bucket" "terraform_state" {
+  bucket = "meu-bucket-de-terraform-state" # Este nome deve ser GLOBALMENTE único na AWS
+
+  # Impede a exclusão acidental deste bucket CRÍTICO
+  lifecycle {
+    prevent_destroy = true
+  }
+
+  tags = {
+    Name    = "Terraform State Storage"
+    Project = "tech-challenge"
+  }
+}
+
+# Opcional: Habilite versionamento no bucket para recuperar históricos do state
+resource "aws_s3_bucket_versioning" "terraform_state_versioning" {
+  bucket = aws_s3_bucket.terraform_state.id
+
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+# 2. Criar a tabela DynamoDB para travar os estados e evitar conflitos
+resource "aws_dynamodb_table" "terraform_state_lock" {
+  name         = "terraform-state-lock"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "LockID"
+
+  attribute {
+    name = "LockID"
+    type = "S"
+  }
+
+  tags = {
+    Name    = "Terraform State Lock Table"
+    Project = "tech-challenge"
+  }
+}
+
+
 resource "aws_dynamodb_table" "users" {
   name         = "tech-challenge-users"
   billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "id"
-  range_key    = "cpf" 
-
-  attribute {
-    name = "id"
-    type = "S"
-  }
+  hash_key     = "cpf"
 
   attribute {
     name = "cpf"
@@ -19,14 +56,6 @@ resource "aws_dynamodb_table" "users" {
     type = "S"
   }
 
-  # ✅ GSI para buscar por CPF
-  global_secondary_index {
-    name            = "CpfIndex"
-    hash_key        = "cpf"
-    projection_type = "ALL"
-  }
-
-  # ✅ GSI para buscar por Email
   global_secondary_index {
     name            = "EmailIndex"
     hash_key        = "email"

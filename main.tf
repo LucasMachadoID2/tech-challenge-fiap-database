@@ -2,7 +2,12 @@
 resource "aws_dynamodb_table" "users" {
   name         = "tech-challenge-users"
   billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "cpf"
+  hash_key     = "id"
+
+  attribute {
+    name = "id"
+    type = "S"
+  }
 
   attribute {
     name = "cpf"
@@ -12,6 +17,12 @@ resource "aws_dynamodb_table" "users" {
   attribute {
     name = "email"
     type = "S"
+  }
+
+  global_secondary_index {
+    name            = "CpfIndex"
+    hash_key        = "cpf"
+    projection_type = "ALL"
   }
 
   global_secondary_index {
@@ -29,7 +40,6 @@ resource "aws_dynamodb_table" "orders" {
   name         = "tech-challenge-orders"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "id"
-  range_key    = "createdAt" 
 
   attribute {
     name = "id"
@@ -37,12 +47,12 @@ resource "aws_dynamodb_table" "orders" {
   }
 
   attribute {
-    name = "cpf"
+    name = "clientId"
     type = "S"
   }
 
   attribute {
-    name = "status"
+    name = "order_status"
     type = "S"
   }
 
@@ -53,8 +63,8 @@ resource "aws_dynamodb_table" "orders" {
 
   # ✅ GSI para buscar pedidos por cliente
   global_secondary_index {
-    name            = "ByCpf"
-    hash_key        = "cpf"
+    name            = "orders_by_client"
+    hash_key        = "clientId"
     range_key       = "createdAt"
     projection_type = "ALL"
   }
@@ -62,7 +72,7 @@ resource "aws_dynamodb_table" "orders" {
   # ✅ GSI para buscar pedidos por status
   global_secondary_index {
     name            = "ByStatus"
-    hash_key        = "status"
+    hash_key        = "order_status"
     range_key       = "createdAt"
     projection_type = "ALL"
   }
@@ -76,7 +86,6 @@ resource "aws_dynamodb_table" "products" {
   name         = "tech-challenge-products"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "id"
-  range_key    = "category" 
 
   attribute {
     name = "id"
@@ -144,7 +153,7 @@ resource "aws_dynamodb_table" "payments" {
   }
 
   attribute {
-    name = "status"
+    name = "payment_status"
     type = "S"
   }
 
@@ -161,7 +170,7 @@ resource "aws_dynamodb_table" "payments" {
   # GSI para buscar pagamentos por status
   global_secondary_index {
     name            = "ByStatus"
-    hash_key        = "status"
+    hash_key        = "payment_status"
     projection_type = "ALL"
   }
 

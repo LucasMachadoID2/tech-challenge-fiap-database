@@ -1,36 +1,15 @@
-# Terraform AWS Database Infrastructure
+## 💬 Justificativa da Migração para DynamoDB
 
-This repository contains Terraform code to provision Amazon DocumentDB (MongoDB compatible) for the Tech Challenge application.
+A migração do MongoDB para o Amazon DynamoDB foi motivada pela necessidade de maior escalabilidade, menor custo operacional, integração nativa com a AWS e simplificação da manutenção.
 
-## Architecture
+🔹 Principais Benefícios:
 
-- Amazon DocumentDB cluster with 1 instance (configurable)
-- Security group allowing access from specified CIDR blocks
-- Automated backups with 7-day retention
-- VPC deployment with private subnets
+**Escalabilidade automática e alto desempenho**: banco serverless e totalmente gerenciado, que ajusta a capacidade conforme a demanda sem necessidade de administração manual.
 
-## Prerequisites
+**Baixa latência e alta disponibilidade**: replicação automática entre zonas de disponibilidade e latências inferiores a 10 ms, garantindo resiliência.
 
-- Terraform >= 1.0.0
-- AWS account with appropriate permissions
-- Existing VPC and subnets
+**Integração com o ecossistema AWS**: integração nativa com Lambda, API Gateway, IAM, CloudWatch e EKS, reduzindo complexidade de configuração e aumentando a observabilidade.
 
-## Setup
+**Modelo NoSQL flexível**: mantém estrutura similar ao MongoDB, com tabelas usando partition key e sort key, facilitando consultas por status, cliente ou data.
 
-1. Clone the repository
-2. Configure AWS credentials
-3. Update variables in `environments/prod/terraform.tfvars`
-4. Set secrets in GitHub:
-   - `AWS_ACCESS_KEY_ID`
-   - `AWS_SECRET_ACCESS_KEY`
-   - `DOCUMENTDB_MASTER_USERNAME`
-   - `DOCUMENTDB_MASTER_PASSWORD`
-
-## Usage
-
-### Manual deployment
-```bash
-cd environments/prod
-terraform init
-terraform plan
-terraform apply
+**Custo e segurança**: serviço pay-per-request, com backups automáticos, criptografia nativa e integração com AWS KMS.

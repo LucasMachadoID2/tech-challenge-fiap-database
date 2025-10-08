@@ -34,7 +34,7 @@ jobs:
         run: terraform init
 
       - name: Planejar alterações
-        run: terraform plan
+        run: terraform plan -auto-approve
 
       - name: Aplicar alterações
-        run: terraform apply
+        run: terraform apply -auto-approve

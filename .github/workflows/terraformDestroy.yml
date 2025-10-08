@@ -2,14 +2,6 @@ name: Terraform Destroy
 
 on:
   workflow_dispatch:  # permite execução manual
-    inputs:
-      environment:
-        description: 'Ambiente a destruir (ex: dev, staging, prod)'
-        required: true
-        default: 'dev'
-      confirm_destroy:
-        description: 'Digite "SIM" para confirmar a destruição'
-        required: true
 
 permissions:
   contents: read
